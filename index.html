@@ -1,0 +1,613 @@
+import React, { useState, useRef } from 'react';
+import { Moon, Sun, Copy, PauseCircle, PlayCircle, ChevronDown, ChevronUp, Gem, Hand, Handshake, Heart, Link as LinkIcon, AlertCircle, Phone, Globe, Edit } from 'lucide-react';
+
+// Main App component
+export default function App() {
+  // --- State Variables ---
+  const [numPersons, setNumPersons] = useState(2);
+  const [persons, setPersons] = useState([
+    { name: 'Hasan Raza Khan', month: 'July', day: 29, year: 1990 },
+    { name: 'Yasmeen Yasin Sandhu', month: 'April', day: 4, year: 1987 }
+  ]);
+  const [selectedMethods, setSelectedMethods] = useState({
+    pythagorean: true,
+    chaldean: true,
+    cheiro: true,
+    kabbalistic: true,
+    tamilVedic: true,
+    chinese: true,
+    islamicAbjad: true,
+    astrology: true,
+  });
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [darkMode, setDarkMode] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [showCopyModal, setShowCopyModal] = useState(false);
+  const [expanded, setExpanded] = useState({});
+  const analysisRef = useRef(null);
+
+  // --- Numerology and Astrology Mappings and Logic ---
+  const MAPPINGS = {
+    Pythagorean: {
+      'A': 1, 'J': 1, 'S': 1, 'B': 2, 'K': 2, 'T': 2, 'C': 3, 'L': 3, 'U': 3,
+      'D': 4, 'M': 4, 'V': 4, 'E': 5, 'N': 5, 'W': 5, 'F': 6, 'O': 6, 'X': 6,
+      'G': 7, 'P': 7, 'Y': 7, 'H': 8, 'Q': 8, 'Z': 8, 'I': 9, 'R': 9
+    },
+    Chaldean: {
+      'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 8, 'G': 3, 'H': 5, 'I': 1,
+      'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'O': 7, 'P': 8, 'Q': 7, 'R': 2,
+      'S': 3, 'T': 4, 'U': 6, 'V': 6, 'W': 6, 'X': 5, 'Y': 1, 'Z': 7
+    },
+    Cheiro: {
+      'A': 1, 'I': 1, 'J': 1, 'Q': 1, 'Y': 1, 'B': 2, 'K': 2, 'R': 2, 'C': 3,
+      'G': 3, 'L': 3, 'S': 3, 'D': 4, 'M': 4, 'T': 4, 'E': 5, 'H': 5, 'N': 5,
+      'X': 5, 'U': 6, 'V': 6, 'W': 6, 'O': 7, 'Z': 7, 'F': 8, 'P': 8
+    },
+    Kabbalistic: {
+      'A': 1, 'I': 1, 'J': 1, 'Q': 1, 'Y': 1, 'B': 2, 'C': 2, 'K': 2, 'G': 3,
+      'L': 3, 'S': 3, 'D': 4, 'M': 4, 'T': 4, 'H': 5, 'N': 5, 'Z': 5, 'E': 8,
+      'X': 8, 'O': 7, 'U': 7, 'V': 7, 'W': 7, 'P': 8, 'F': 6, 'R': 6
+    },
+    IslamicAbjad: {
+      'A': 1, 'B': 2, 'J': 3, 'D': 4, 'H': 5, 'W': 6, 'Z': 7, 'Y': 8, 'T': 9,
+      'K': 10, 'L': 20, 'M': 30, 'N': 50, 'S': 60, 'E': 70, 'F': 80,
+      'Q': 100, 'R': 200, 'Sh': 300, 'Th': 400, 'Kh': 500, 'Dh': 600, 'Gh': 800
+    },
+  };
+
+  const ASTROLOGY_MAP = {
+    'January': { day: 20, sign: 'Aquarius', element: 'Air', luckyColor: 'Blue', luckyDay: 'Saturday', birthstone: 'Garnet', rulingPlanet: 'Uranus' },
+    'February': { day: 19, sign: 'Pisces', element: 'Water', luckyColor: 'Sea Green', luckyDay: 'Thursday', birthstone: 'Amethyst', rulingPlanet: 'Neptune' },
+    'March': { day: 21, sign: 'Aries', element: 'Fire', luckyColor: 'Red', luckyDay: 'Tuesday', birthstone: 'Aquamarine', rulingPlanet: 'Mars' },
+    'April': { day: 20, sign: 'Taurus', element: 'Earth', luckyColor: 'Green', luckyDay: 'Friday', birthstone: 'Diamond', rulingPlanet: 'Venus' },
+    'May': { day: 21, sign: 'Gemini', element: 'Air', luckyColor: 'Yellow', luckyDay: 'Wednesday', birthstone: 'Emerald', rulingPlanet: 'Mercury' },
+    'June': { day: 21, sign: 'Cancer', element: 'Water', luckyColor: 'White', luckyDay: 'Monday', birthstone: 'Pearl', rulingPlanet: 'Moon' },
+    'July': { day: 23, sign: 'Leo', element: 'Fire', luckyColor: 'Gold', luckyDay: 'Sunday', birthstone: 'Peridot', rulingPlanet: 'Sun' },
+    'August': { day: 23, sign: 'Virgo', element: 'Earth', luckyColor: 'Silver', luckyDay: 'Wednesday', birthstone: 'Sardonyx', rulingPlanet: 'Mercury' },
+    'September': { day: 23, sign: 'Libra', element: 'Air', luckyColor: 'Pink', luckyDay: 'Friday', birthstone: 'Sapphire', rulingPlanet: 'Venus' },
+    'October': { day: 23, sign: 'Scorpio', element: 'Water', luckyColor: 'Black', luckyDay: 'Tuesday', birthstone: 'Opal', rulingPlanet: 'Pluto' },
+    'November': { day: 22, sign: 'Sagittarius', element: 'Fire', luckyColor: 'Purple', luckyDay: 'Thursday', birthstone: 'Topaz', rulingPlanet: 'Jupiter' },
+    'December': { day: 22, sign: 'Capricorn', element: 'Earth', luckyColor: 'Dark Blue', luckyDay: 'Saturday', birthstone: 'Turquoise', rulingPlanet: 'Saturn' },
+  };
+
+  const getZodiacSign = (month, day) => {
+    const monthDetails = ASTROLOGY_MAP[month];
+    if (!monthDetails) return 'Unknown';
+
+    if (day >= monthDetails.day) {
+      return monthDetails.sign;
+    } else {
+      const months = Object.keys(ASTROLOGY_MAP);
+      const prevMonthIndex = months.indexOf(month) === 0 ? 11 : months.indexOf(month) - 1;
+      return ASTROLOGY_MAP[months[prevMonthIndex]].sign;
+    }
+  };
+
+  const ZODIAC_COMPATIBILITY = {
+    'Aries': { 'Aries': 'High', 'Taurus': 'Low', 'Gemini': 'Medium', 'Cancer': 'Low', 'Leo': 'High', 'Virgo': 'Medium', 'Libra': 'High', 'Scorpio': 'Low', 'Sagittarius': 'High', 'Capricorn': 'Low', 'Aquarius': 'Medium', 'Pisces': 'Medium' },
+    'Taurus': { 'Aries': 'Low', 'Taurus': 'High', 'Gemini': 'Medium', 'Cancer': 'High', 'Leo': 'Low', 'Virgo': 'High', 'Libra': 'Medium', 'Scorpio': 'High', 'Sagittarius': 'Medium', 'Capricorn': 'High', 'Aquarius': 'Low', 'Pisces': 'High' },
+    'Gemini': { 'Aries': 'Medium', 'Taurus': 'Medium', 'Gemini': 'High', 'Cancer': 'High', 'Leo': 'Medium', 'Virgo': 'Low', 'Libra': 'High', 'Scorpio': 'Medium', 'Sagittarius': 'High', 'Capricorn': 'Low', 'Aquarius': 'High', 'Pisces': 'High' },
+    'Cancer': { 'Aries': 'Low', 'Taurus': 'High', 'Gemini': 'High', 'Cancer': 'High', 'Leo': 'Medium', 'Virgo': 'High', 'Libra': 'Medium', 'Scorpio': 'High', 'Sagittarius': 'Low', 'Capricorn': 'High', 'Aquarius': 'Low', 'Pisces': 'High' },
+    'Leo': { 'Aries': 'High', 'Taurus': 'Low', 'Gemini': 'Medium', 'Cancer': 'Medium', 'Leo': 'High', 'Virgo': 'Low', 'Libra': 'High', 'Scorpio': 'Low', 'Sagittarius': 'High', 'Capricorn': 'Low', 'Aquarius': 'High', 'Pisces': 'Medium' },
+    'Virgo': { 'Aries': 'Medium', 'Taurus': 'High', 'Gemini': 'Low', 'Cancer': 'High', 'Leo': 'Low', 'Virgo': 'High', 'Libra': 'High', 'Scorpio': 'High', 'Sagittarius': 'Medium', 'Capricorn': 'High', 'Aquarius': 'Low', 'Pisces': 'High' },
+    'Libra': { 'Aries': 'High', 'Taurus': 'Medium', 'Gemini': 'High', 'Cancer': 'Medium', 'Leo': 'High', 'Virgo': 'High', 'Libra': 'High', 'Scorpio': 'Low', 'Sagittarius': 'High', 'Capricorn': 'Medium', 'Aquarius': 'High', 'Pisces': 'Medium' },
+    'Scorpio': { 'Aries': 'Low', 'Taurus': 'High', 'Gemini': 'Medium', 'Cancer': 'High', 'Leo': 'Low', 'Virgo': 'High', 'Libra': 'Low', 'Scorpio': 'High', 'Sagittarius': 'Low', 'Capricorn': 'High', 'Aquarius': 'Low', 'Pisces': 'High' },
+    'Sagittarius': { 'Aries': 'High', 'Taurus': 'Medium', 'Gemini': 'High', 'Cancer': 'Low', 'Leo': 'High', 'Virgo': 'Medium', 'Libra': 'High', 'Scorpio': 'Low', 'Sagittarius': 'High', 'Capricorn': 'Low', 'Aquarius': 'High', 'Pisces': 'High' },
+    'Capricorn': { 'Aries': 'Low', 'Taurus': 'High', 'Gemini': 'Low', 'Cancer': 'High', 'Leo': 'Low', 'Virgo': 'High', 'Libra': 'Medium', 'Scorpio': 'High', 'Sagittarius': 'Low', 'Aquarius': 'Medium', 'Pisces': 'Medium' },
+    'Aquarius': { 'Aries': 'Medium', 'Taurus': 'Low', 'Gemini': 'High', 'Cancer': 'Low', 'Leo': 'High', 'Virgo': 'Low', 'Libra': 'High', 'Scorpio': 'Low', 'Sagittarius': 'High', 'Capricorn': 'Medium', 'Aquarius': 'High', 'Pisces': 'Medium' },
+    'Pisces': { 'Aries': 'Medium', 'Taurus': 'High', 'Gemini': 'High', 'Cancer': 'High', 'Leo': 'Medium', 'Virgo': 'High', 'Libra': 'Medium', 'Scorpio': 'High', 'Sagittarius': 'High', 'Capricorn': 'Medium', 'Aquarius': 'Medium', 'Pisces': 'High' },
+  };
+
+  const getElementCompatibility = (element1, element2) => {
+    if (element1 === element2) return 'Excellent';
+    if ((element1 === 'Fire' && element2 === 'Air') || (element1 === 'Air' && element2 === 'Fire')) return 'Good';
+    if ((element1 === 'Earth' && element2 === 'Water') || (element1 === 'Water' && element2 === 'Earth')) return 'Good';
+    if ((element1 === 'Fire' && element2 === 'Earth') || (element1 === 'Earth' && element2 === 'Fire')) return 'Fair';
+    if ((element1 === 'Air' && element2 === 'Water') || (element1 === 'Water' && element2 === 'Air')) return 'Fair';
+    return 'Challenging';
+  };
+
+  const reduceToSingleDigit = (num) => {
+    if (isNaN(num)) return NaN;
+    let sum = String(num).split('').map(Number).reduce((a, b) => a + b, 0);
+    while (sum > 9 && ![11, 22, 33].includes(sum)) {
+      sum = String(sum).split('').map(Number).reduce((a, b) => a + b, 0);
+    }
+    return sum;
+  };
+
+  const calculateNameNumber = (name, system) => {
+    if (!MAPPINGS[system]) return null;
+    let sum = 0;
+    const mapping = MAPPINGS[system];
+    const parts = name.toUpperCase().split(' ');
+    const partSums = parts.map(part => {
+      let partSum = 0;
+      for (const char of part) {
+        if (mapping[char]) {
+          partSum += mapping[char];
+        }
+      }
+      return reduceToSingleDigit(partSum);
+    });
+    sum = partSums.reduce((a, b) => a + b, 0);
+    return { total: reduceToSingleDigit(sum), partSums };
+  };
+
+  const calculateLifePath = (person) => {
+    const { month, day, year } = person;
+    if (isNaN(day) || isNaN(year)) return NaN;
+    const monthIndex = new Date(Date.parse(month + ' 1, 2000')).getMonth() + 1;
+    const monthNum = reduceToSingleDigit(monthIndex);
+    const dayNum = reduceToSingleDigit(day);
+    const yearNum = reduceToSingleDigit(year);
+    const total = monthNum + dayNum + yearNum;
+    return reduceToSingleDigit(total);
+  };
+
+  const getTamilVedicNumbers = (person) => {
+    if (isNaN(person.day) || isNaN(person.year)) return { driver: NaN, connector: NaN, kethu: NaN };
+    const driver = reduceToSingleDigit(person.day);
+    const monthIndex = new Date(Date.parse(person.month + ' 1, 2000')).getMonth() + 1;
+    const connector = reduceToSingleDigit(reduceToSingleDigit(person.day) + reduceToSingleDigit(monthIndex) + reduceToSingleDigit(person.year));
+    const kethu = reduceToSingleDigit(monthIndex);
+    return { driver, connector, kethu };
+  };
+
+  const getMissingAndPresentNumbers = (person) => {
+    if (isNaN(person.day) || isNaN(person.year)) return { presentNumbers: [], missingNumbers: [] };
+    const numbers = new Set();
+    const fullDate = `${new Date(Date.parse(person.month + ' 1, 2000')).getMonth() + 1}${person.day}${person.year}`;
+    for (const char of fullDate) {
+      if (char !== '0') numbers.add(parseInt(char));
+    }
+    for (const char of person.name.toUpperCase()) {
+      if (char.match(/[A-Z]/) && MAPPINGS.Pythagorean[char]) {
+        const num = MAPPINGS.Pythagorean[char];
+        if (num !== 0) numbers.add(num);
+      }
+    }
+    const presentNumbers = Array.from(numbers).sort((a, b) => a - b);
+    const missingNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(n => !presentNumbers.includes(n));
+    return { presentNumbers, missingNumbers };
+  };
+
+  const getSuccessLines = (presentNumbers) => {
+    const successLines = [];
+    const mind = presentNumbers.includes(3) && presentNumbers.includes(6) && presentNumbers.includes(9);
+    const practical = presentNumbers.includes(4) && presentNumbers.includes(5) && presentNumbers.includes(6);
+    const emotional = presentNumbers.includes(1) && presentNumbers.includes(2) && presentNumbers.includes(3);
+    if (mind) successLines.push('Mind Plane');
+    if (practical) successLines.push('Practical Plane');
+    if (emotional) successLines.push('Emotional Plane');
+    return successLines;
+  };
+
+  const getChineseZodiac = (year) => {
+    if (isNaN(year)) return 'N/A';
+    const zodiacs = ['Monkey', 'Rooster', 'Dog', 'Pig', 'Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat'];
+    const elements = ['Metal', 'Water', 'Wood', 'Fire', 'Earth'];
+    const elementStartYear = 1984; // Start year for Wood Rat
+    const zodiacIndex = (year - 4) % 12;
+    const elementIndex = (Math.floor((year - elementStartYear) / 2)) % 5;
+    return `${elements[elementIndex]} ${zodiacs[zodiacIndex]}`;
+  };
+
+  // --- State and UI Handlers ---
+  const handlePersonChange = (index, key, value) => {
+    const newPersons = [...persons];
+    newPersons[index][key] = (key === 'day' || key === 'year') ? (value === '' ? '' : parseInt(value)) : value;
+    setPersons(newPersons);
+  };
+
+  const handleCheckboxChange = (method) => {
+    setSelectedMethods(prev => ({ ...prev, [method]: !prev[method] }));
+  };
+
+  const handleAnalyze = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const results = persons.map(person => {
+        const lifePath = calculateLifePath(person);
+        const pythagoreanName = calculateNameNumber(person.name, 'Pythagorean');
+        const chaldeanName = calculateNameNumber(person.name, 'Chaldean');
+        const abjadName = calculateNameNumber(person.name, 'IslamicAbjad');
+        const astrology = ASTROLOGY_MAP[person.month];
+        const zodiacSign = getZodiacSign(person.month, person.day);
+        const { presentNumbers, missingNumbers } = getMissingAndPresentNumbers(person);
+        const successLines = getSuccessLines(presentNumbers);
+        const tamilVedic = getTamilVedicNumbers(person);
+        const chineseZodiac = getChineseZodiac(person.year);
+
+        return {
+          ...person,
+          lifePath,
+          pythagoreanName,
+          chaldeanName,
+          abjadName,
+          astrology,
+          zodiacSign,
+          presentNumbers,
+          missingNumbers,
+          successLines,
+          tamilVedic,
+          chineseZodiac
+        };
+      });
+      setAnalysisResult(results);
+      setLoading(false);
+      if (analysisRef.current) {
+        analysisRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 1000); // Simulate a loading delay
+  };
+
+  const handleCopy = () => {
+    if (analysisResult) {
+      const analysisText = analysisRef.current.innerText;
+      const el = document.createElement('textarea');
+      el.value = analysisText;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setShowCopyModal(true);
+      setTimeout(() => {
+        setShowCopyModal(false);
+      }, 2000);
+    }
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const handlePersonCountChange = (e) => {
+    const newNum = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
+    setNumPersons(newNum);
+    setPersons(prev => {
+      const newArray = [...prev];
+      while (newArray.length < newNum) {
+        newArray.push({ name: '', month: 'January', day: 1, year: 2000 });
+      }
+      return newArray.slice(0, newNum);
+    });
+  };
+
+  const toggleExpand = (key) => {
+    setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // --- UI Components ---
+  const PersonAnalysis = ({ person, index }) => {
+    const { zodiacSign, astrology, tamilVedic, lifePath, pythagoreanName, chaldeanName, abjadName, presentNumbers, missingNumbers, successLines, chineseZodiac } = person;
+    const driverNumber = reduceToSingleDigit(person.day);
+    const key = `person-${index}`;
+    const isExpanded = expanded[key];
+
+    return (
+      <div classname="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+        <button
+          onclick={() => toggleExpand(key)}
+          className="w-full text-left p-2 flex items-center justify-between text-lg font-semibold text-purple-600 dark:text-purple-400"
+        >
+          {`Person ${index + 1} Analysis: ${person.name || `Person ${index + 1}`}`}
+          {isExpanded ? <chevronup /> : <chevrondown />}
+        
+        {isExpanded && (
+          <div classname="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
+            <div>
+              <h4 classname="font-bold text-md flex items-center mb-2"><hand classname="h-4 w-4 mr-2 text-purple-500" /> Numerological Foundations</hand></h4>
+              <ul classname="list-disc list-inside space-y-1">
+                {selectedMethods.pythagorean && <li>Pythagorean Expression Number: <span classname="font-semibold">{pythagoreanName?.total || 'N/A'}</span></li>}
+                {selectedMethods.chaldean && <li>Chaldean Name Vibration: <span classname="font-semibold">{chaldeanName?.total || 'N/A'}</span></li>}
+                {selectedMethods.islamicAbjad && <li>Islamic (Abjad) Name Vibration: <span classname="font-semibold">{abjadName?.total || 'N/A'}</span></li>}
+                {selectedMethods.tamilVedic && <li>Tamil/Vedic Numerology: Driver: <span classname="font-semibold">{tamilVedic?.driver || 'N/A'}</span>, Connector: <span classname="font-semibold">{tamilVedic?.connector || 'N/A'}</span>, Kethu: <span classname="font-semibold">{tamilVedic?.kethu || 'N/A'}</span></li>}
+                <li>Driver Number (Birth Number): <span classname="font-semibold">{!isNaN(driverNumber) ? driverNumber : 'N/A'}</span></li>
+                <li>Connector Number (Life Path): <span classname="font-semibold">{!isNaN(lifePath) ? lifePath : 'N/A'}</span></li>
+              </ul>
+            </div>
+            <div>
+              <h4 classname="font-bold text-md flex items-center mb-2"><gem classname="h-4 w-4 mr-2 text-purple-500" /> Planetary & Astrological Influences</gem></h4>
+              <ul classname="list-disc list-inside space-y-1">
+                {selectedMethods.astrology && <li>Zodiac Sign: <span classname="font-semibold">{zodiacSign || 'N/A'}</span></li>}
+                {selectedMethods.astrology && <li>Element: <span classname="font-semibold">{astrology?.element || 'N/A'}</span></li>}
+                {selectedMethods.astrology && <li>Ruling Planet: <span classname="font-semibold">{astrology?.rulingPlanet || 'N/A'}</span></li>}
+                {selectedMethods.chinese && <li>Chinese Zodiac: <span classname="font-semibold">{chineseZodiac || 'N/A'}</span></li>}
+              </ul>
+            </div>
+            <div>
+              <h4 classname="font-bold text-md flex items-center mb-2"><linkicon classname="h-4 w-4 mr-2 text-purple-500" /> Lo Shu Grid & Success Lines</linkicon></h4>
+              <ul classname="list-disc list-inside space-y-1">
+                <li>Present Numbers: <span classname="font-semibold">{presentNumbers?.join(', ') || 'None'}</span></li>
+                <li>Missing Numbers: <span classname="font-semibold">{missingNumbers?.join(', ') || 'None'}</span></li>
+                <li>Success Lines: <span classname="font-semibold">{successLines?.length > 0 ? successLines.join(', ') : 'None'}</span></li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </chevrondown></chevronup></button
+></div>
+    );
+  };
+
+  const JointAnalysis = ({ person1, person2 }) => {
+    if (!person1 || !person2) return null;
+    const key = 'joint-analysis';
+    const isExpanded = expanded[key];
+    const zodiacSign1 = getZodiacSign(person1.month, person1.day);
+    const zodiacSign2 = getZodiacSign(person2.month, person2.day);
+    const astrology1 = ASTROLOGY_MAP[person1.month];
+    const astrology2 = ASTROLOGY_MAP[person2.month];
+    const compatibility = ZODIAC_COMPATIBILITY[zodiacSign1]?.[zodiacSign2] || 'N/A';
+    const elementCompatibility = getElementCompatibility(astrology1?.element, astrology2?.element);
+
+    return (
+      <div classname="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <button
+          onclick={() => toggleExpand(key)}
+          className="w-full text-left p-2 flex items-center justify-between text-lg font-semibold text-purple-600 dark:text-purple-400"
+        >
+          Joint Analysis and Compatibility
+          {isExpanded ? <chevronup /> : <chevrondown />}
+        
+        {isExpanded && (
+          <div classname="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
+            <h4 classname="font-bold text-md flex items-center mb-2"><handshake classname="h-4 w-4 mr-2 text-purple-500" /> Compatibility Overview</handshake></h4>
+            <ul classname="list-disc list-inside space-y-1">
+              <li>Numerological Compatibility: Drivers <span classname="font-semibold">{!isNaN(reduceToSingleDigit(person1.day)) ? reduceToSingleDigit(person1.day) : 'N/A'}</span> and <span classname="font-semibold">{!isNaN(reduceToSingleDigit(person2.day)) ? reduceToSingleDigit(person2.day) : 'N/A'}</span>. Life Paths <span classname="font-semibold">{person1.lifePath}</span> and <span classname="font-semibold">{person2.lifePath}</span>.</li>
+              <li>Astrological Compatibility: Zodiac Signs <span classname="font-semibold">{zodiacSign1}</span> (<span classname="font-semibold">{astrology1?.element || 'N/A'}</span>) and <span classname="font-semibold">{zodiacSign2}</span> (<span classname="font-semibold">{astrology2?.element || 'N/A'}</span>). Overall Compatibility: <span classname="font-semibold">{compatibility}</span>.</li>
+              <li>Element Compatibility: <span classname="font-semibold">{elementCompatibility}</span></li>
+            </ul>
+          </div>
+        )}
+      </chevrondown></chevronup></button
+></div>
+    );
+  };
+
+  const CopyModal = () => (
+    <div classname="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div classname="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-6 rounded-xl shadow-2xl flex items-center space-x-3 transform transition-all duration-300 scale-100">
+        <copy classname="h-6 w-6 text-green-500" />
+        <span classname="font-semibold">Analysis results copied to clipboard!</span>
+      </copy></div>
+    </div>
+  );
+
+  // --- Main Render Function ---
+  return (
+    <div classname={`${darkmode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} min-h-screen font-inter transition-colors duration-300`}>
+      <div classname="container mx-auto p-4 md:p-8">
+
+        {/* Header */}
+        <header classname="flex items-center justify-between flex-wrap p-6 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-xl mb-8">
+          <div classname="flex-1">
+            <h1 classname="text-4xl font-extrabold tracking-tight">
+              Universal Numerology & Astrology Suite
+            </h1>
+            <p classname="mt-2 text-lg opacity-90">
+              Discover the mystical connections between names, numbers, and celestial influences.
+            </p>
+          </div>
+          <button
+            onclick={toggledarkmode}
+            classname="p-3 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300"
+          >
+            {darkMode ? <sun classname="text-white" /> : <moon classname="text-white" />}
+          
+        </moon></sun></button
+></header>
+
+        {/* Main Content Layout */}
+        <main classname="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          {/* Left Column - Inputs */}
+          <div classname="space-y-8">
+            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <edit classname="w-6 h-6 mr-2" /> Select Analysis Methods
+              </edit></h2>
+              <div classname="grid grid-cols-2 gap-4">
+                {Object.keys(selectedMethods).map(method => (
+                  <label key={method} classname="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedmethods[method]}
+                      onchange={() => handleCheckboxChange(method)}
+                      className="form-checkbox h-5 w-5 text-purple-600 rounded-md border-gray-300 dark:border-gray-600 focus:ring-purple-500 dark:bg-gray-700"
+                    />
+                    <span classname="text-gray-800 dark:text-gray-200">
+                      {method.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    </span>
+                  </input
+></label>
+                ))}
+              </div>
+            </div>
+
+            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <handshake classname="w-6 h-6 mr-2" /> Person Information
+              </handshake></h2>
+              <div classname="mb-4">
+                <label classname="block text-sm font-medium mb-1">Number of Persons:</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  value={numpersons}
+                  onchange={handlepersoncountchange}
+                  classname="w-20 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                />
+              </input
+></div>
+
+              {persons.map((person, index) => (
+                <div key={index} classname="space-y-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 classname="text-lg font-semibold text-purple-600 dark:text-purple-400">Person {index + 1}</h3>
+                  <div>
+                    <label classname="block text-sm font-medium mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={person.name}
+                      onchange={(e) => handlePersonChange(index, 'name', e.target.value)}
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      placeholder="Full Name"
+                    />
+                  </input
+></div>
+                  <div>
+                    <label classname="block text-sm font-medium mb-1">Date of Birth</label>
+                    <div classname="flex space-x-2">
+                      <select
+                        value={person.month}
+                        onchange={(e) => handlePersonChange(index, 'month', e.target.value)}
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      >
+                        {Object.keys(ASTROLOGY_MAP).map(month => (
+                          <option key="{month}" value="{month}" />{month}
+                        ))}
+                      
+                      <input
+                        type="number"
+                        min="1"
+                        max="31"
+                        value={person.day}
+                        onchange={(e) => handlePersonChange(index, 'day', e.target.value)}
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                        placeholder="Day"
+                      />
+                      <input
+                        type="number"
+                        min="1900"
+                        max="2100"
+                        value={person.year}
+                        onchange={(e) => handlePersonChange(index, 'year', e.target.value)}
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                        placeholder="Year"
+                      />
+                    </input
+></input
+></select
+></div>
+                  </div>
+                </div>
+              ))}
+              <button
+                onclick={handleanalyze}
+                disabled={loading}
+                classname="w-full mt-4 p-4 rounded-xl font-bold text-lg bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center disabled:bg-gray-500"
+              >
+                {loading ? (
+                  <>
+                    <pausecircle classname="h-5 w-5 mr-2 animate-pulse" /> Analyzing...
+                  
+                ) : (
+                  <>
+                    <playcircle classname="h-5 w-5 mr-2" /> Analyze and Compare
+                  
+                )}
+              
+            </playcircle></pausecircle></button
+></div>
+          </div>
+
+          {/* Right Column - Results */}
+          <div classname="space-y-8" ref={analysisref}>
+            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <div classname="flex justify-between items-center mb-4">
+                <h2 classname="text-2xl font-bold flex items-center text-purple-600 dark:text-purple-400">
+                  <heart classname="w-6 h-6 mr-2" /> Analysis Results
+                </heart></h2>
+                {analysisResult && (
+                  <button
+                    onclick={handlecopy}
+                    classname="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
+                  >
+                    <copy classname="h-5 w-5" />
+                  
+                )}
+              </copy></button
+></div>
+              <p classname="text-sm italic text-gray-600 dark:text-gray-400 mb-4">
+                This analysis integrates various numerological and astrological systems to provide a comprehensive profile. It is important to remember that these are interpretations based on ancient wisdom systems and offer insights into potential tendencies and influences, rather than definitive predictions, which always depend on free will.
+              </p>
+
+              {analysisResult && analysisResult.map((person, index) => (
+                <personanalysis key={index} person={person} index={index} />
+              ))}
+              {analysisResult && analysisResult.length > 1 && (
+                <jointanalysis person1={analysisresult[0]} person2={analysisresult[1]} />
+              )}
+            </jointanalysis></personanalysis></div>
+
+            {/* Expert Team Section */}
+            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <hand classname="w-6 h-6 mr-2" /> Meet Your Expert Team
+              </hand></h2>
+              <div classname="space-y-6">
+                <div classname="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                  <div>
+                    <h3 classname="font-bold text-lg">Advocate Hasan Raza Khan</h3>
+                    <p classname="text-sm text-gray-600 dark:text-gray-400">Advocate High Court</p>
+                    <p classname="text-sm mt-1">Professional advocate with extensive experience in numerological analysis and astrological guidance. Combining legal expertise with mystical wisdom for comprehensive life guidance.</p>
+                    <div classname="flex items-center space-x-4 mt-3">
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><phone classname="h-4 w-4 mr-1" /> Call</phone></a>
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><handshake classname="h-4 w-4 mr-1" /> WhatsApp</handshake></a>
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><globe classname="h-4 w-4 mr-1" /> Google Profile</globe></a>
+                    </div>
+                  </div>
+                </div>
+                <div classname="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                  <div>
+                    <h3 classname="font-bold text-lg">Adv Yasmeen Yasin Sandhu</h3>
+                    <p classname="text-sm text-gray-600 dark:text-gray-400">Legal Advocate & Numerology Consultant</p>
+                    <p classname="text-sm mt-1">Professional advocate with expertise in numerological analysis. Combining legal wisdom with mystical insights for comprehensive guidance.</p>
+                    <div classname="flex items-center space-x-4 mt-3">
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><phone classname="h-4 w-4 mr-1" /> Call</phone></a>
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><handshake classname="h-4 w-4 mr-1" /> WhatsApp</handshake></a>
+                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><globe classname="h-4 w-4 mr-1" /> Google Profile</globe></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Service Portfolio Section */}
+            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <gem classname="w-6 h-6 mr-2" /> Complete Service Portfolio
+              </gem></h2>
+              <div classname="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Personal Numerology</div>
+                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Astrology Charts</div>
+                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Legal Consultation</div>
+                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Business Guidance</div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer classname="mt-8 p-6 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-2xl shadow-xl text-center">
+          <h4 classname="text-2xl font-bold">Universal Numerology & Astrology Suite</h4>
+          <p classname="mt-2 text-md">
+            Discover your destiny through the ancient wisdom of numbers and celestial guidance
+          </p>
+          <div classname="flex justify-center flex-wrap gap-4 mt-4 text-sm opacity-80">
+            <span>7 Numerology Systems</span>
+            <span>Astrology Integration</span>
+            <span>Compatibility Analysis</span>
+          </div>
+          <p classname="mt-4 text-xs opacity-60">
+            © 2025 Universal Numerology & Astrology Suite. All mystical insights reserved.
+          </p>
+        </footer>
+      </div>
+
+      {showCopyModal && <copymodal />}
+    </copymodal></div>
+  );
+}
