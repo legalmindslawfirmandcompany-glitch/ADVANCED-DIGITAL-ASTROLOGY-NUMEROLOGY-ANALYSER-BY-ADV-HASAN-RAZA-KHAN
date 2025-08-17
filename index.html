@@ -286,48 +286,47 @@ export default function App() {
     const isExpanded = expanded[key];
 
     return (
-      <div classname="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
         <button
-          onclick={() => toggleExpand(key)}
+          onClick={() => toggleExpand(key)}
           className="w-full text-left p-2 flex items-center justify-between text-lg font-semibold text-purple-600 dark:text-purple-400"
         >
           {`Person ${index + 1} Analysis: ${person.name || `Person ${index + 1}`}`}
-          {isExpanded ? <chevronup /> : <chevrondown />}
-        
+          {isExpanded ? <ChevronUp /> : <ChevronDown />}
+        </button>
         {isExpanded && (
-          <div classname="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
+          <div className="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
             <div>
-              <h4 classname="font-bold text-md flex items-center mb-2"><hand classname="h-4 w-4 mr-2 text-purple-500" /> Numerological Foundations</hand></h4>
-              <ul classname="list-disc list-inside space-y-1">
-                {selectedMethods.pythagorean && <li>Pythagorean Expression Number: <span classname="font-semibold">{pythagoreanName?.total || 'N/A'}</span></li>}
-                {selectedMethods.chaldean && <li>Chaldean Name Vibration: <span classname="font-semibold">{chaldeanName?.total || 'N/A'}</span></li>}
-                {selectedMethods.islamicAbjad && <li>Islamic (Abjad) Name Vibration: <span classname="font-semibold">{abjadName?.total || 'N/A'}</span></li>}
-                {selectedMethods.tamilVedic && <li>Tamil/Vedic Numerology: Driver: <span classname="font-semibold">{tamilVedic?.driver || 'N/A'}</span>, Connector: <span classname="font-semibold">{tamilVedic?.connector || 'N/A'}</span>, Kethu: <span classname="font-semibold">{tamilVedic?.kethu || 'N/A'}</span></li>}
-                <li>Driver Number (Birth Number): <span classname="font-semibold">{!isNaN(driverNumber) ? driverNumber : 'N/A'}</span></li>
-                <li>Connector Number (Life Path): <span classname="font-semibold">{!isNaN(lifePath) ? lifePath : 'N/A'}</span></li>
+              <h4 className="font-bold text-md flex items-center mb-2"><Hand className="h-4 w-4 mr-2 text-purple-500" /> Numerological Foundations</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {selectedMethods.pythagorean && <li>Pythagorean Expression Number: <span className="font-semibold">{pythagoreanName?.total || 'N/A'}</span></li>}
+                {selectedMethods.chaldean && <li>Chaldean Name Vibration: <span className="font-semibold">{chaldeanName?.total || 'N/A'}</span></li>}
+                {selectedMethods.islamicAbjad && <li>Islamic (Abjad) Name Vibration: <span className="font-semibold">{abjadName?.total || 'N/A'}</span></li>}
+                {selectedMethods.tamilVedic && <li>Tamil/Vedic Numerology: Driver: <span className="font-semibold">{tamilVedic?.driver || 'N/A'}</span>, Connector: <span className="font-semibold">{tamilVedic?.connector || 'N/A'}</span>, Kethu: <span className="font-semibold">{tamilVedic?.kethu || 'N/A'}</span></li>}
+                <li>Driver Number (Birth Number): <span className="font-semibold">{!isNaN(driverNumber) ? driverNumber : 'N/A'}</span></li>
+                <li>Connector Number (Life Path): <span className="font-semibold">{!isNaN(lifePath) ? lifePath : 'N/A'}</span></li>
               </ul>
             </div>
             <div>
-              <h4 classname="font-bold text-md flex items-center mb-2"><gem classname="h-4 w-4 mr-2 text-purple-500" /> Planetary & Astrological Influences</gem></h4>
-              <ul classname="list-disc list-inside space-y-1">
-                {selectedMethods.astrology && <li>Zodiac Sign: <span classname="font-semibold">{zodiacSign || 'N/A'}</span></li>}
-                {selectedMethods.astrology && <li>Element: <span classname="font-semibold">{astrology?.element || 'N/A'}</span></li>}
-                {selectedMethods.astrology && <li>Ruling Planet: <span classname="font-semibold">{astrology?.rulingPlanet || 'N/A'}</span></li>}
-                {selectedMethods.chinese && <li>Chinese Zodiac: <span classname="font-semibold">{chineseZodiac || 'N/A'}</span></li>}
+              <h4 className="font-bold text-md flex items-center mb-2"><Gem className="h-4 w-4 mr-2 text-purple-500" /> Planetary & Astrological Influences</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {selectedMethods.astrology && <li>Zodiac Sign: <span className="font-semibold">{zodiacSign || 'N/A'}</span></li>}
+                {selectedMethods.astrology && <li>Element: <span className="font-semibold">{astrology?.element || 'N/A'}</span></li>}
+                {selectedMethods.astrology && <li>Ruling Planet: <span className="font-semibold">{astrology?.rulingPlanet || 'N/A'}</span></li>}
+                {selectedMethods.chinese && <li>Chinese Zodiac: <span className="font-semibold">{chineseZodiac || 'N/A'}</span></li>}
               </ul>
             </div>
             <div>
-              <h4 classname="font-bold text-md flex items-center mb-2"><linkicon classname="h-4 w-4 mr-2 text-purple-500" /> Lo Shu Grid & Success Lines</linkicon></h4>
-              <ul classname="list-disc list-inside space-y-1">
-                <li>Present Numbers: <span classname="font-semibold">{presentNumbers?.join(', ') || 'None'}</span></li>
-                <li>Missing Numbers: <span classname="font-semibold">{missingNumbers?.join(', ') || 'None'}</span></li>
-                <li>Success Lines: <span classname="font-semibold">{successLines?.length > 0 ? successLines.join(', ') : 'None'}</span></li>
+              <h4 className="font-bold text-md flex items-center mb-2"><LinkIcon className="h-4 w-4 mr-2 text-purple-500" /> Lo Shu Grid & Success Lines</h4>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Present Numbers: <span className="font-semibold">{presentNumbers?.join(', ') || 'None'}</span></li>
+                <li>Missing Numbers: <span className="font-semibold">{missingNumbers?.join(', ') || 'None'}</span></li>
+                <li>Success Lines: <span className="font-semibold">{successLines?.length > 0 ? successLines.join(', ') : 'None'}</span></li>
               </ul>
             </div>
           </div>
         )}
-      </chevrondown></chevronup></button
-></div>
+      </div>
     );
   };
 
@@ -343,138 +342,133 @@ export default function App() {
     const elementCompatibility = getElementCompatibility(astrology1?.element, astrology2?.element);
 
     return (
-      <div classname="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <button
-          onclick={() => toggleExpand(key)}
+          onClick={() => toggleExpand(key)}
           className="w-full text-left p-2 flex items-center justify-between text-lg font-semibold text-purple-600 dark:text-purple-400"
         >
           Joint Analysis and Compatibility
-          {isExpanded ? <chevronup /> : <chevrondown />}
-        
+          {isExpanded ? <ChevronUp /> : <ChevronDown />}
+        </button>
         {isExpanded && (
-          <div classname="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
-            <h4 classname="font-bold text-md flex items-center mb-2"><handshake classname="h-4 w-4 mr-2 text-purple-500" /> Compatibility Overview</handshake></h4>
-            <ul classname="list-disc list-inside space-y-1">
-              <li>Numerological Compatibility: Drivers <span classname="font-semibold">{!isNaN(reduceToSingleDigit(person1.day)) ? reduceToSingleDigit(person1.day) : 'N/A'}</span> and <span classname="font-semibold">{!isNaN(reduceToSingleDigit(person2.day)) ? reduceToSingleDigit(person2.day) : 'N/A'}</span>. Life Paths <span classname="font-semibold">{person1.lifePath}</span> and <span classname="font-semibold">{person2.lifePath}</span>.</li>
-              <li>Astrological Compatibility: Zodiac Signs <span classname="font-semibold">{zodiacSign1}</span> (<span classname="font-semibold">{astrology1?.element || 'N/A'}</span>) and <span classname="font-semibold">{zodiacSign2}</span> (<span classname="font-semibold">{astrology2?.element || 'N/A'}</span>). Overall Compatibility: <span classname="font-semibold">{compatibility}</span>.</li>
-              <li>Element Compatibility: <span classname="font-semibold">{elementCompatibility}</span></li>
+          <div className="mt-4 text-gray-800 dark:text-gray-200 space-y-4">
+            <h4 className="font-bold text-md flex items-center mb-2"><Handshake className="h-4 w-4 mr-2 text-purple-500" /> Compatibility Overview</h4>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Numerological Compatibility: Drivers <span className="font-semibold">{!isNaN(reduceToSingleDigit(person1.day)) ? reduceToSingleDigit(person1.day) : 'N/A'}</span> and <span className="font-semibold">{!isNaN(reduceToSingleDigit(person2.day)) ? reduceToSingleDigit(person2.day) : 'N/A'}</span>. Life Paths <span className="font-semibold">{person1.lifePath}</span> and <span className="font-semibold">{person2.lifePath}</span>.</li>
+              <li>Astrological Compatibility: Zodiac Signs <span className="font-semibold">{zodiacSign1}</span> (<span className="font-semibold">{astrology1?.element || 'N/A'}</span>) and <span className="font-semibold">{zodiacSign2}</span> (<span className="font-semibold">{astrology2?.element || 'N/A'}</span>). Overall Compatibility: <span className="font-semibold">{compatibility}</span>.</li>
+              <li>Element Compatibility: <span className="font-semibold">{elementCompatibility}</span></li>
             </ul>
           </div>
         )}
-      </chevrondown></chevronup></button
-></div>
+      </div>
     );
   };
 
   const CopyModal = () => (
-    <div classname="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div classname="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-6 rounded-xl shadow-2xl flex items-center space-x-3 transform transition-all duration-300 scale-100">
-        <copy classname="h-6 w-6 text-green-500" />
-        <span classname="font-semibold">Analysis results copied to clipboard!</span>
-      </copy></div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-6 rounded-xl shadow-2xl flex items-center space-x-3 transform transition-all duration-300 scale-100">
+        <Copy className="h-6 w-6 text-green-500" />
+        <span className="font-semibold">Analysis results copied to clipboard!</span>
+      </div>
     </div>
   );
 
   // --- Main Render Function ---
   return (
-    <div classname={`${darkmode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} min-h-screen font-inter transition-colors duration-300`}>
-      <div classname="container mx-auto p-4 md:p-8">
+    <div className={`${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'} min-h-screen font-inter transition-colors duration-300`}>
+      <div className="container mx-auto p-4 md:p-8">
 
         {/* Header */}
-        <header classname="flex items-center justify-between flex-wrap p-6 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-xl mb-8">
-          <div classname="flex-1">
-            <h1 classname="text-4xl font-extrabold tracking-tight">
+        <header className="flex items-center justify-between flex-wrap p-6 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-xl mb-8">
+          <div className="flex-1">
+            <h1 className="text-4xl font-extrabold tracking-tight">
               Universal Numerology & Astrology Suite
             </h1>
-            <p classname="mt-2 text-lg opacity-90">
+            <p className="mt-2 text-lg opacity-90">
               Discover the mystical connections between names, numbers, and celestial influences.
             </p>
           </div>
           <button
-            onclick={toggledarkmode}
-            classname="p-3 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300"
+            onClick={toggleDarkMode}
+            className="p-3 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300"
           >
-            {darkMode ? <sun classname="text-white" /> : <moon classname="text-white" />}
-          
-        </moon></sun></button
-></header>
+            {darkMode ? <Sun className="text-white" /> : <Moon className="text-white" />}
+          </button>
+        </header>
 
         {/* Main Content Layout */}
-        <main classname="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           {/* Left Column - Inputs */}
-          <div classname="space-y-8">
-            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
-              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
-                <edit classname="w-6 h-6 mr-2" /> Select Analysis Methods
-              </edit></h2>
-              <div classname="grid grid-cols-2 gap-4">
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 className="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <Edit className="w-6 h-6 mr-2" /> Select Analysis Methods
+              </h2>
+              <div className="grid grid-cols-2 gap-4">
                 {Object.keys(selectedMethods).map(method => (
-                  <label key={method} classname="flex items-center space-x-2">
+                  <label key={method} className="flex items-center space-x-2">
                     <input
                       type="checkbox"
-                      checked={selectedmethods[method]}
-                      onchange={() => handleCheckboxChange(method)}
+                      checked={selectedMethods[method]}
+                      onChange={() => handleCheckboxChange(method)}
                       className="form-checkbox h-5 w-5 text-purple-600 rounded-md border-gray-300 dark:border-gray-600 focus:ring-purple-500 dark:bg-gray-700"
                     />
-                    <span classname="text-gray-800 dark:text-gray-200">
+                    <span className="text-gray-800 dark:text-gray-200">
                       {method.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                     </span>
-                  </input
-></label>
+                  </label>
                 ))}
               </div>
             </div>
 
-            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
-              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
-                <handshake classname="w-6 h-6 mr-2" /> Person Information
-              </handshake></h2>
-              <div classname="mb-4">
-                <label classname="block text-sm font-medium mb-1">Number of Persons:</label>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 className="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <Handshake className="w-6 h-6 mr-2" /> Person Information
+              </h2>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Number of Persons:</label>
                 <input
                   type="number"
                   min="1"
                   max="5"
-                  value={numpersons}
-                  onchange={handlepersoncountchange}
-                  classname="w-20 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  value={numPersons}
+                  onChange={handlePersonCountChange}
+                  className="w-20 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
-              </input
-></div>
+              </div>
 
               {persons.map((person, index) => (
-                <div key={index} classname="space-y-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 classname="text-lg font-semibold text-purple-600 dark:text-purple-400">Person {index + 1}</h3>
+                <div key={index} className="space-y-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="text-lg font-semibold text-purple-600 dark:text-purple-400">Person {index + 1}</h3>
                   <div>
-                    <label classname="block text-sm font-medium mb-1">Name</label>
+                    <label className="block text-sm font-medium mb-1">Name</label>
                     <input
                       type="text"
                       value={person.name}
-                      onchange={(e) => handlePersonChange(index, 'name', e.target.value)}
+                      onChange={(e) => handlePersonChange(index, 'name', e.target.value)}
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       placeholder="Full Name"
                     />
-                  </input
-></div>
+                  </div>
                   <div>
-                    <label classname="block text-sm font-medium mb-1">Date of Birth</label>
-                    <div classname="flex space-x-2">
+                    <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                    <div className="flex space-x-2">
                       <select
                         value={person.month}
-                        onchange={(e) => handlePersonChange(index, 'month', e.target.value)}
+                        onChange={(e) => handlePersonChange(index, 'month', e.target.value)}
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       >
                         {Object.keys(ASTROLOGY_MAP).map(month => (
-                          <option key="{month}" value="{month}" />{month}
+                          <option key={month} value={month}>{month}</option>
                         ))}
-                      
+                      </select>
                       <input
                         type="number"
                         min="1"
                         max="31"
                         value={person.day}
-                        onchange={(e) => handlePersonChange(index, 'day', e.target.value)}
+                        onChange={(e) => handlePersonChange(index, 'day', e.target.value)}
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         placeholder="Day"
                       />
@@ -483,92 +477,87 @@ export default function App() {
                         min="1900"
                         max="2100"
                         value={person.year}
-                        onchange={(e) => handlePersonChange(index, 'year', e.target.value)}
+                        onChange={(e) => handlePersonChange(index, 'year', e.target.value)}
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         placeholder="Year"
                       />
-                    </input
-></input
-></select
-></div>
+                    </div>
                   </div>
                 </div>
               ))}
               <button
-                onclick={handleanalyze}
+                onClick={handleAnalyze}
                 disabled={loading}
-                classname="w-full mt-4 p-4 rounded-xl font-bold text-lg bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center disabled:bg-gray-500"
+                className="w-full mt-4 p-4 rounded-xl font-bold text-lg bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center disabled:bg-gray-500"
               >
                 {loading ? (
                   <>
-                    <pausecircle classname="h-5 w-5 mr-2 animate-pulse" /> Analyzing...
-                  
+                    <PauseCircle className="h-5 w-5 mr-2 animate-pulse" /> Analyzing...
+                  </>
                 ) : (
                   <>
-                    <playcircle classname="h-5 w-5 mr-2" /> Analyze and Compare
-                  
+                    <PlayCircle className="h-5 w-5 mr-2" /> Analyze and Compare
+                  </>
                 )}
-              
-            </playcircle></pausecircle></button
-></div>
+              </button>
+            </div>
           </div>
 
           {/* Right Column - Results */}
-          <div classname="space-y-8" ref={analysisref}>
-            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
-              <div classname="flex justify-between items-center mb-4">
-                <h2 classname="text-2xl font-bold flex items-center text-purple-600 dark:text-purple-400">
-                  <heart classname="w-6 h-6 mr-2" /> Analysis Results
-                </heart></h2>
+          <div className="space-y-8" ref={analysisRef}>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold flex items-center text-purple-600 dark:text-purple-400">
+                  <Heart className="w-6 h-6 mr-2" /> Analysis Results
+                </h2>
                 {analysisResult && (
                   <button
-                    onclick={handlecopy}
-                    classname="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
+                    onClick={handleCopy}
+                    className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
                   >
-                    <copy classname="h-5 w-5" />
-                  
+                    <Copy className="h-5 w-5" />
+                  </button>
                 )}
-              </copy></button
-></div>
-              <p classname="text-sm italic text-gray-600 dark:text-gray-400 mb-4">
+              </div>
+              <p className="text-sm italic text-gray-600 dark:text-gray-400 mb-4">
                 This analysis integrates various numerological and astrological systems to provide a comprehensive profile. It is important to remember that these are interpretations based on ancient wisdom systems and offer insights into potential tendencies and influences, rather than definitive predictions, which always depend on free will.
               </p>
 
               {analysisResult && analysisResult.map((person, index) => (
-                <personanalysis key={index} person={person} index={index} />
+                <PersonAnalysis key={index} person={person} index={index} />
               ))}
               {analysisResult && analysisResult.length > 1 && (
-                <jointanalysis person1={analysisresult[0]} person2={analysisresult[1]} />
+                <JointAnalysis person1={analysisResult[0]} person2={analysisResult[1]} />
               )}
-            </jointanalysis></personanalysis></div>
+            </div>
 
             {/* Expert Team Section */}
-            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
-              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
-                <hand classname="w-6 h-6 mr-2" /> Meet Your Expert Team
-              </hand></h2>
-              <div classname="space-y-6">
-                <div classname="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 className="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <Hand className="w-6 h-6 mr-2" /> Meet Your Expert Team
+              </h2>
+              <div className="space-y-6">
+                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
                   <div>
-                    <h3 classname="font-bold text-lg">Advocate Hasan Raza Khan</h3>
-                    <p classname="text-sm text-gray-600 dark:text-gray-400">Advocate High Court</p>
-                    <p classname="text-sm mt-1">Professional advocate with extensive experience in numerological analysis and astrological guidance. Combining legal expertise with mystical wisdom for comprehensive life guidance.</p>
-                    <div classname="flex items-center space-x-4 mt-3">
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><phone classname="h-4 w-4 mr-1" /> Call</phone></a>
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><handshake classname="h-4 w-4 mr-1" /> WhatsApp</handshake></a>
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><globe classname="h-4 w-4 mr-1" /> Google Profile</globe></a>
+                    <h3 className="font-bold text-lg">Advocate Hasan Raza Khan</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Advocate High Court</p>
+                    <p className="text-sm mt-1">Professional advocate with extensive experience in numerological analysis and astrological guidance. Combining legal expertise with mystical wisdom for comprehensive life guidance.</p>
+                    <div className="flex items-center space-x-4 mt-3">
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Phone className="h-4 w-4 mr-1" /> Call</a>
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Handshake className="h-4 w-4 mr-1" /> WhatsApp</a>
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Globe className="h-4 w-4 mr-1" /> Google Profile</a>
                     </div>
                   </div>
                 </div>
-                <div classname="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
                   <div>
-                    <h3 classname="font-bold text-lg">Adv Yasmeen Yasin Sandhu</h3>
-                    <p classname="text-sm text-gray-600 dark:text-gray-400">Legal Advocate & Numerology Consultant</p>
-                    <p classname="text-sm mt-1">Professional advocate with expertise in numerological analysis. Combining legal wisdom with mystical insights for comprehensive guidance.</p>
-                    <div classname="flex items-center space-x-4 mt-3">
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><phone classname="h-4 w-4 mr-1" /> Call</phone></a>
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><handshake classname="h-4 w-4 mr-1" /> WhatsApp</handshake></a>
-                      <a href="#" classname="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><globe classname="h-4 w-4 mr-1" /> Google Profile</globe></a>
+                    <h3 className="font-bold text-lg">Adv Yasmeen Yasin Sandhu</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Legal Advocate & Numerology Consultant</p>
+                    <p className="text-sm mt-1">Professional advocate with expertise in numerological analysis. Combining legal wisdom with mystical insights for comprehensive guidance.</p>
+                    <div className="flex items-center space-x-4 mt-3">
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Phone className="h-4 w-4 mr-1" /> Call</a>
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Handshake className="h-4 w-4 mr-1" /> WhatsApp</a>
+                      <a href="#" className="flex items-center text-purple-600 hover:text-purple-400 transition-colors"><Globe className="h-4 w-4 mr-1" /> Google Profile</a>
                     </div>
                   </div>
                 </div>
@@ -576,38 +565,38 @@ export default function App() {
             </div>
 
             {/* Service Portfolio Section */}
-            <div classname="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
-              <h2 classname="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
-                <gem classname="w-6 h-6 mr-2" /> Complete Service Portfolio
-              </gem></h2>
-              <div classname="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Personal Numerology</div>
-                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Astrology Charts</div>
-                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Legal Consultation</div>
-                <div classname="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Business Guidance</div>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl">
+              <h2 className="text-2xl font-bold mb-4 flex items-center text-purple-600 dark:text-purple-400">
+                <Gem className="w-6 h-6 mr-2" /> Complete Service Portfolio
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Personal Numerology</div>
+                <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Astrology Charts</div>
+                <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Legal Consultation</div>
+                <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">Business Guidance</div>
               </div>
             </div>
           </div>
         </main>
 
         {/* Footer */}
-        <footer classname="mt-8 p-6 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-2xl shadow-xl text-center">
-          <h4 classname="text-2xl font-bold">Universal Numerology & Astrology Suite</h4>
-          <p classname="mt-2 text-md">
+        <footer className="mt-8 p-6 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-2xl shadow-xl text-center">
+          <h4 className="text-2xl font-bold">Universal Numerology & Astrology Suite</h4>
+          <p className="mt-2 text-md">
             Discover your destiny through the ancient wisdom of numbers and celestial guidance
           </p>
-          <div classname="flex justify-center flex-wrap gap-4 mt-4 text-sm opacity-80">
+          <div className="flex justify-center flex-wrap gap-4 mt-4 text-sm opacity-80">
             <span>7 Numerology Systems</span>
             <span>Astrology Integration</span>
             <span>Compatibility Analysis</span>
           </div>
-          <p classname="mt-4 text-xs opacity-60">
+          <p className="mt-4 text-xs opacity-60">
             © 2025 Universal Numerology & Astrology Suite. All mystical insights reserved.
           </p>
         </footer>
       </div>
 
-      {showCopyModal && <copymodal />}
-    </copymodal></div>
+      {showCopyModal && <CopyModal />}
+    </div>
   );
 }
